@@ -11,12 +11,12 @@
 using std::vector;
 using std::string;
 
-ArgParser::ArgParser(int argc, char **argv, char *pattern):
+ArgParser::ArgParser(int argc, char **argv, const char *pattern):
 options(vector<int>(128, -1)), argv_index(0), argc(argc) {
     for (int i = 0; i < argc; i++) {
         this->argv.push_back(argv[i]);
     }
-    for (char *c = pattern; *c; c++) {
+    for (const char *c = pattern; *c; c++) {
         if (std::isalpha(*c)) {
             options[*c] = 0; // 无需向后读入
             if (*(c + 1) == ':') { // 后一位为参数
@@ -28,7 +28,7 @@ options(vector<int>(128, -1)), argv_index(0), argc(argc) {
                 c++;
             }
         } else {
-            fprintf(stderr, "Wrong option pattern.\n");
+            fprintf(stderr, "Wrong option pattern.\n\n");
             exit(-1);
         }
     }
@@ -54,7 +54,7 @@ int ArgParser::next_arg() {
                 if (argv[argv_index][2] == 0) {
                     argv_index++;
                     if (argv_index == argc) {
-                        fprintf(stderr, "Miss option for -%c.\n", c);
+                        fprintf(stderr, "Miss option for -%c.\n\n", c);
                         return -1;
                     }
                     param = string(argv[argv_index]);
@@ -91,37 +91,37 @@ void ArgParser::parse_arg(ArgParser &parser, char &head, char &tail, char &disal
                 case 'w':
                 case 'c':
                     if (!check_duplicate(function)) {
-                        fprintf(stderr, "Duplicate main function for %c %c", arg, function);
+                        fprintf(stderr, "Duplicate main function for %c %c\n", arg, function);
                     }
                     function = (char) arg;
                     break;
                 case 'h':
                     if (!check_duplicate(head)) {
-                        fprintf(stderr, "Duplicate value of -%c for new: %s old: %c", arg, parser.param.c_str(), head);
+                        fprintf(stderr, "Duplicate value of -%c for new: %s old: %c\n", arg, parser.param.c_str(), head);
                     }
                     head = parser.param[0];
                     if (!std::isalpha(head)) {
-                        fprintf(stderr, "Error value of -%c must be alpha", arg);
+                        fprintf(stderr, "Error value of -%c must be alpha\n", arg);
                     }
                     head = std::tolower(head);
                     break;
                 case 't':
                     if (!check_duplicate(tail)) {
-                        fprintf(stderr, "Duplicate value of -%c for new: %s old: %c", arg, parser.param.c_str(), tail);
+                        fprintf(stderr, "Duplicate value of -%c for new: %s old: %c\n", arg, parser.param.c_str(), tail);
                     }
                     tail = parser.param[0];
                     if (!std::isalpha(tail)) {
-                        fprintf(stderr, "Error value of -%c must be alpha", arg);
+                        fprintf(stderr, "Error value of -%c must be alpha\n", arg);
                     }
                     tail = std::tolower(tail);
                     break;
                 case 'j':
                     if (!check_duplicate(disallowed_head)) {
-                        fprintf(stderr, "Duplicate value of -%c for new: %s old: %c", arg, parser.param.c_str(), disallowed_head);
+                        fprintf(stderr, "Duplicate value of -%c for new: %s old: %c\n", arg, parser.param.c_str(), disallowed_head);
                     }
                     disallowed_head = parser.param[0];
                     if (!std::isalpha(disallowed_head)) {
-                        fprintf(stderr, "Error value of -%c must be alpha", arg);
+                        fprintf(stderr, "Error value of -%c must be alpha\n", arg);
                     }
                     disallowed_head = std::tolower(disallowed_head);
                     break;
@@ -129,11 +129,11 @@ void ArgParser::parse_arg(ArgParser &parser, char &head, char &tail, char &disal
                     if (!enable_loop) {
                         enable_loop = true;
                     } else {
-                        fprintf(stderr, "Duplicate value of -%c", arg);
+                        fprintf(stderr, "Duplicate value of -%c\n", arg);
                     }
                     break;
                 default:
-                    fprintf(stderr, "Unknown argument %c", arg);
+                    fprintf(stderr, "Unknown argument %c\n", arg);
                     break;
             }
         }
@@ -143,17 +143,17 @@ void ArgParser::parse_arg(ArgParser &parser, char &head, char &tail, char &disal
     switch (function) {
         case 'n':
             if (head != 0 || tail != 0 || disallowed_head != 0 || enable_loop) {
-                fprintf(stderr, "argument -%c is not compatible with other argument");
+                fprintf(stderr, "argument -%c is not compatible with other argument\n", function);
             }
         case 'w':
         case 'c':
             break;
         default:
-            fprintf(stderr, "You must specify a function");
+            fprintf(stderr, "You must specify a function\n");
     }
 
     // check input_file
     if (input_file.empty()) {
-        fprintf(stderr, "You must specify a file");
+        fprintf(stderr, "You must specify a file\n");
     }
 }

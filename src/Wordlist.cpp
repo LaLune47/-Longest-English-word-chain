@@ -4,45 +4,68 @@
 #include <ArgParser.h>
 #include <Core.h>
 #include <cstdio>
-#define buffer_size 100000
+#include <string>
+#include <vector>
+#include <sstream>
+#include <fstream>
+#include <iostream>
+#define bufferSize 1024
+#define myIsalpha(c) ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+#define myTolower(c) (c >= 'a' ? (c - 0x20) : (c))
 
-using namespace std;
-
-int get_words_from_line(int idx, const char* buf, char *words[]) {
-    bool is_start = true;
-    char word[buffer_size];
-    int length = 0;
-    int word_num = 0;
-    for (int i = 0; buf[i] != '\0'; i++) {
-        if (is_start) {
-            if (isalpha(buf[i])) {
-                word[length++] = (char) tolower(buf[i]);
-                is_start = false;
+int get_word_from_file(std::string input_file_name, char *words[]) {
+    FILE *input_file = fopen(input_file_name.c_str(), "r");
+    if (input_file == nullptr) {
+        fprintf(stderr, "No such file %s", input_file_name.c_str());
+    }
+    bool is_word_start = true;
+    int word_length = 0;
+    char word[bufferSize];
+    char c;
+    std::vector<std::string> words_vector;
+    while ((c = (char) fgetc(input_file)) != EOF) {
+        if (is_word_start) {
+            if (myIsalpha(c)) {
+                word[word_length++] = myTolower(c);
+                is_word_start = false;
             }
         } else {
-            if (isalpha(buf[i])) {
-                word[length++] = (char) tolower(buf[i]);
+            if (myIsalpha(c)) {
+                word[word_length++] = myTolower(c);
             } else {
-                is_start = true;
-
+                words_vector.emplace_back(word); // 减少一次构造....
+                is_word_start = true;
+                word_length = 0;
             }
         }
     }
+
+    for (int i = 0; i < words_vector.size(); i++) {
+        words[i] = new char[words_vector[i].length() + 1];
+        memcpy(words[i], words_vector[i].c_str(), words_vector[i].length() + 1);
+    }
+
+    return words_vector.size();
 }
 
-int get_words_from_file(const char *input_file_name, char *words[]) {
-    FILE *input_file = fopen(input_file_name, "r");
-    if (input_file != nullptr) {
-        int idx = 0;
-        char buf[buffer_size] = {0};
-        while (fscanf(input_file, "%s", buf) != EOF) {
-            idx += get_words_from_line(idx, buf, words);
-        }
-    } else {
-        fprintf(stderr, "Count not find file %s", input_file_name);
+int get_word_from_file_v2(std::string input_file_name, char *words[]) {
+    using namespace std;
+    ifstream file(input_file_name);
+    string line;
+    vector<string> words_vector;
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+
     }
+    return 0;
 }
 
 int main(int argc, char *argv[]) {
-    return 0;
+    ArgParser parser(argc, argv, "nwch:t:j:r");
+    char head = 0, tail = 0, disallowed_head = 0, function = 0;
+    bool enable_loop;
+    std::string input_file_name;
+
+    ArgParser::parse_arg(parser, head, tail, disallowed_head, enable_loop, function, input_file_name);
 }

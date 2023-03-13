@@ -2,7 +2,7 @@
 // Created by AORUS on 2023/3/8.
 //
 
-#include "include/ArgParser.h"
+#include "ArgParser.h"
 #include "Core.h"
 #define GEN_CHAINS_ALL 1
 #define GEN_CHAIN_WORD 2
@@ -77,8 +77,8 @@ bool check_duplicate(char data) {
 
 void read_file() {}
 
-void ArgParser::parse_arg(char &head, char &tail, char &disallowed_head, bool &enable_loop, char &function,
-                          string &input_file, ArgParser &parser, char *argv) {
+void ArgParser::parse_arg(ArgParser &parser, char &head, char &tail, char &disallowed_head, bool &enable_loop,
+                          char &function, string &input_file) {
     int arg;
     while ((arg = parser.next_arg()) != 0) {
         if (arg == -1) {

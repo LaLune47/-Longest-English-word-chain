@@ -11,8 +11,8 @@ class ArgParser{
 public:
     ArgParser(int argc, char* argv[], char* pattern);
 
-    static void parse_arg(char &head, char &tail, char &disallowed_head, bool &enable_loop, char &function,
-                          std::string &input_file, ArgParser &parser, char *argv);
+    static void parse_arg(ArgParser &parser, char &head, char &tail, char &disallowed_head, bool &enable_loop,
+                          char &function, std::string &input_file);
 
     int next_arg();
 

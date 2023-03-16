@@ -1,3 +1,5 @@
+#include <iostream>
+#include "cstring"
 #include "CharConverter.h"
 
 std::vector<std::string> CharConverter::ReadFromBytePtrArray(char** words, int len) {
@@ -13,11 +15,9 @@ std::vector<std::string> CharConverter::ReadFromBytePtrArray(char** words, int l
 }
 
 void CharConverter::WriteToBytePtrArray(const std::vector<std::string>& buffer, char** words) {
-    for (size_t i = 0; i < buffer.size(); i++) {
-        char* p = words[i];
-        for (char j : buffer[i]) {
-            *p++ = static_cast<char>(j);
-        }
-        *p = 0;
+
+    for (int i = 0; i < buffer.size(); i++) {
+        words[i] = new char [buffer[i].size()];
+        strcpy(words[i], buffer[i].c_str());
     }
 }

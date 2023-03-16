@@ -36,8 +36,7 @@ namespace core
             std::vector<std::string> &words) {
         auto wordMap = WordMap::Build(words);
         auto graph = BuildWordGraph(wordMap, [](const auto&) { return 1; });
-        std::cout << "here";
-        std::cout << std::endl;
+
 
         if (graph.HasCircle()) {
             // todo
@@ -64,16 +63,18 @@ namespace core
             const std::function<int(const std::string&)>& calcWeight) {
         auto wordMap = WordMap::Build(words);
         auto graph = BuildWordGraph(wordMap, calcWeight);
+
         if (!enableLoop && graph.HasCircle()) {
             // todo
         }
 
         auto headLimit = [head, &wordMap, disallowed_head](int i) {
-            return wordMap.GetWord(i).front() != disallowed_head
-            && (head == 0 || wordMap.GetWord(i).front() == head);
+            return wordMap.GetWord(i).front() != disallowed_head && (head == '0' || wordMap.GetWord(i).front() == head);
+            //return head == '0' || wordMap.GetWord(i).front() == head;
         };
+
         auto tailLimit = [tail, &wordMap](int i) {
-            return tail == 0 || wordMap.GetWord(i).back() == tail;
+            return tail == '0' || wordMap.GetWord(i).back() == tail;
         };
 
         auto longestChain = !enableLoop
@@ -107,6 +108,7 @@ namespace core
         if (ret < 0) {
             return ret;
         }
+
         CharConverter::WriteToBytePtrArray(res, result);
         return ret;
     }

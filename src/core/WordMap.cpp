@@ -4,19 +4,19 @@
 
 namespace core
 {
-    static std::string toLower(const std::string& input) {
-        std::string result = input;
-        std::locale loc;
-        std::transform(result.begin(), result.end(), result.begin(),
-                       [&loc](wchar_t c) { return std::tolower(c, loc); });
-        return result;
+    std::string toLower(std::string s) {
+        std::string result;
+        for (int i = 0; i < s.length(); i++) {
+            result += tolower(s[i]);
+        }
+        return result; // 返回result
     }
 
 
 	WordMap WordMap::Build(std::vector<std::string> &wordList)
 	{
         WordMap wordMap; // 创建一个WordMap对象
-        for (const auto& word : wordList)
+        for (std::string word : wordList)
         {
             wordMap.AddWord(toLower(word)); // 使用wordMap.来访问成员函数
         }

@@ -1,17 +1,17 @@
 ﻿#include <queue>
+#include <iostream>
 #include "Graph.h"
 
 namespace core
 {
 
-	void Graph::AddNode(int id, int weight)
-	{
-		_weights[id] = weight;
-		if (id >= _inDegrees.size())
-		{
-			_inDegrees.insert(_inDegrees.end(), (std::vector<int>(id - _inDegrees.size() + 1)).begin(), (std::vector<int>(id - _inDegrees.size() + 1)).end());
-		}
-	}
+    void Graph::AddNode(int id, int weight) {
+        _weights[id] = weight;
+        if (id >= _inDegrees.size()) {
+            _inDegrees.resize(id + 1);
+            _inDegrees[id] = 0;
+        }
+    }
 
 	void Graph::AddEdge(int from, int to)
 	{
@@ -135,14 +135,17 @@ namespace core
     }
 
     std::vector<int> Graph::DagFindLongestChain(const std::function<bool(int)>& head, const std::function<bool(int)>& tail) {
+
         std::unordered_set<int> visited;
         std::vector<int> topo = DagTopoSort();
+
         std::vector<int> queue;
         for (int node : topo) {
             if (head(node)) {
                 queue.push_back(node);
             }
         }
+
         std::vector<int> result;
         int maxLength = INT_MIN;
         for (int node : queue) {

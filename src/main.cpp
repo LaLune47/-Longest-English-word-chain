@@ -51,8 +51,8 @@ char** readWords(string filePath) {
 }
 
 void printWords(char** words) {
-    for (int i = 0; words[i] != nullptr; i++) {
-        cout << words[i] << " ";
+    for (int i = 0; words[i] != NULL; i++) {
+        cout << words[i] << std::endl;
     }
     cout << endl;
 }
@@ -91,7 +91,8 @@ int main(int argc, char* argv[]) {
 
     char **words = readWords(filePath);
     //printWords(words,wordNum);
-    char **result = nullptr;
+    //char **result = nullptr;
+    char **result = new char*[wordNum];
 
     if (cal_type == 'n') {
         core::WordChainCoreInterface::gen_chains_all(words,wordNum,result);
@@ -102,4 +103,6 @@ int main(int argc, char* argv[]) {
     }
 
     printWords(result);
+
+    return 0;
 }

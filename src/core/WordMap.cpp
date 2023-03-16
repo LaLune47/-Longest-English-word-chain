@@ -13,15 +13,15 @@ namespace core
     }
 
 
-	std::shared_ptr<WordMap> WordMap::Build(std::vector<std::string> &wordList)
+	WordMap WordMap::Build(std::vector<std::string> &wordList)
 	{
-		auto wordMap = std::make_shared<WordMap>();
-		for (const auto& word : wordList)
-		{
-			wordMap->AddWord(toLower(word));
-		}
+        WordMap wordMap; // 创建一个WordMap对象
+        for (const auto& word : wordList)
+        {
+            wordMap.AddWord(toLower(word)); // 使用wordMap.来访问成员函数
+        }
 
-		return wordMap;
+        return wordMap;
 	}
 
 	int WordMap::AddWord(const std::string &word)

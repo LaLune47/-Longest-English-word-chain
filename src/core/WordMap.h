@@ -16,7 +16,7 @@ namespace core
 		int _wordCount = 0;
 
 	public:
-		static std::shared_ptr<WordMap> Build(std::vector<std::string> &wordList);
+        static WordMap Build(std::vector<std::string> &wordList);
 
 		int AddWord(const std::string &word);
 

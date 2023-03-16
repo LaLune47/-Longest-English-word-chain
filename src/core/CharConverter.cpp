@@ -1,6 +1,6 @@
 #include "CharConverter.h"
 
-static std::vector<std::string> ReadFromBytePtrArray(char** words, int len) {
+std::vector<std::string> CharConverter::ReadFromBytePtrArray(char** words, int len) {
     std::vector<std::string> buffer;
     for (int i = 0; i < len; i++) {
         std::string word;
@@ -12,7 +12,7 @@ static std::vector<std::string> ReadFromBytePtrArray(char** words, int len) {
     return buffer;
 }
 
-static void WriteToBytePtrArray(const std::vector<std::string>& buffer, char** words) {
+void CharConverter::WriteToBytePtrArray(const std::vector<std::string>& buffer, char** words) {
     for (size_t i = 0; i < buffer.size(); i++) {
         char* p = words[i];
         for (char j : buffer[i]) {

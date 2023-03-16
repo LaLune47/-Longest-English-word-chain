@@ -1,0 +1,5 @@
+/.idea
+/bin
+/build
+/*.txt
+/cmake-build-debug

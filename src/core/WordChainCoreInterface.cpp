@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include "WordChainCoreInterface.h"
 #include "CharConverter.h"
+#include "Error.h"
 
 namespace core
 {
@@ -37,9 +38,9 @@ namespace core
         auto wordMap = WordMap::Build(words);
         auto graph = BuildWordGraph(wordMap, [](const auto&) { return 1; });
 
-
         if (graph.HasCircle()) {
-            // todo
+            std::cerr << "===has circle===" << std::endl;
+            return {-Error::CIRCLE_ERROR, std::vector<std::string>()};
         }
 
         auto allChains = graph.FindAllChains();
@@ -65,16 +66,16 @@ namespace core
         auto graph = BuildWordGraph(wordMap, calcWeight);
 
         if (!enableLoop && graph.HasCircle()) {
-            // todo
+            std::cerr << "===has circle===" << std::endl;
+            return {-Error::CIRCLE_ERROR, std::vector<std::string>()};
         }
 
         auto headLimit = [head, &wordMap, disallowed_head](int i) {
-            return wordMap.GetWord(i).front() != disallowed_head && (head == '0' || wordMap.GetWord(i).front() == head);
-            //return head == '0' || wordMap.GetWord(i).front() == head;
+            return wordMap.GetWord(i).front() != disallowed_head && (head == 0 || wordMap.GetWord(i).front() == head);
         };
 
         auto tailLimit = [tail, &wordMap](int i) {
-            return tail == '0' || wordMap.GetWord(i).back() == tail;
+            return tail == 0 || wordMap.GetWord(i).back() == tail;
         };
 
         auto longestChain = !enableLoop
@@ -85,7 +86,7 @@ namespace core
         for (auto id : longestChain) {
             wordChain.push_back(wordMap.GetWord(id));
         }
-        return {wordChain.size(), wordChain};
+        return {static_cast<int>(wordChain.size()), wordChain};
     }
 
     std::pair<int, std::vector<std::string>> GenChainWord(std::vector<std::string>& words,

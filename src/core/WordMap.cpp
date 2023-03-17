@@ -6,8 +6,8 @@ namespace core
 {
     std::string toLower(std::string s) {
         std::string result;
-        for (int i = 0; i < s.length(); i++) {
-            result += tolower(s[i]);
+        for (char i : s) {
+            result += tolower(i);
         }
         return result; // 返回result
     }

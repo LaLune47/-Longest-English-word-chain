@@ -50,20 +50,19 @@ char** readWords(string filePath) {
     return result;
 }
 
-void printWords(char** words) {
-    for (int i = 0; words[i] != NULL; i++) {
+void printWords(char** words,int len) {
+    for (int i = 0; i < len; i++) {
         cout << words[i] << std::endl;
     }
-    cout << endl;
 }
 
 int main(int argc, char* argv[]) {
-    char cal_type = '0';  // n,w,c Functional parameters
+    char cal_type = 0;  // n,w,c Functional parameters
 
     // 存储限定的字母
-    char h = '0'; //h
-    char t = '0'; //t
-    char j = '0'; //j
+    char h = 0; //h
+    char t = 0; //t
+    char j = 0; //j
 
     bool r = false; //r 是否允许成环
 
@@ -94,15 +93,18 @@ int main(int argc, char* argv[]) {
     //char **result = nullptr;
     char **result = new char*[wordNum];
 
+    int chain_len;
     if (cal_type == 'n') {
-        core::WordChainCoreInterface::gen_chains_all(words,wordNum,result);
+        chain_len = core::WordChainCoreInterface::gen_chains_all(words,wordNum,result);
     } else if (cal_type == 'w') {
-        core::WordChainCoreInterface::gen_chain_word(words,wordNum,result,h,t,j,r);
+        chain_len = core::WordChainCoreInterface::gen_chain_word(words,wordNum,result,h,t,j,r);
     } else if (cal_type == 'c') {
-        core::WordChainCoreInterface::gen_chain_char(words,wordNum,result,h,t,j,r);
+        chain_len = core::WordChainCoreInterface::gen_chain_char(words,wordNum,result,h,t,j,r);
     }
 
-    printWords(result);
+    if (chain_len > 0) {
+        printWords(result,chain_len);
+    }
 
     return 0;
 }

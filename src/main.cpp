@@ -13,7 +13,7 @@ char** readWords(string filePath) {
     ifstream file(filePath);
     set<string> words; // 容器用于存储单词
 
-    if (file.is_open()) { // todo 文件异常处理
+    if (file.is_open()) {
         string line;
         while (getline(file, line)) {
             string word;
@@ -68,18 +68,24 @@ int main(int argc, char* argv[]) {
 
     string filePath;
 
-    // todo 异常处理
     // 处理命令行参数,读文件来读单词列表的问题放在最后
     for (int count = 1; count < argc; count++) {
         if (argv[count][0] == '-') { // 参数解析
             if (argv[count][1] == 'n' || argv[count][1] == 'w' || argv[count][1] == 'c') {
                 cal_type = argv[count][1];
-            } else if (argv[count][1] == 'h') {
-                h = tolower(argv[++count][0]);
-            } else if (argv[count][1] == 't') {
-                t = tolower(argv[++count][0]);
-            } else if (argv[count][1] == 'j') {
-                j = tolower(argv[++count][0]);
+            } else if (argv[count][1] == 'h'||argv[count][1] == 't'||argv[count][1] == 'j') {
+                char flag = argv[count][1];
+                char temp_char = tolower(argv[++count][0]);
+                if (temp_char > 'z' || temp_char < 'a') {
+                    throw invalid_argument("invalid letter");
+                }
+                if (flag == 'h') {
+                    h = temp_char;
+                } else if (flag == 't') {
+                    t = temp_char;
+                } else if (flag == 'j') {
+                    j = temp_char;
+                }
             } else if (argv[count][1] == 'r') {
                 r = true;
             }

@@ -39,8 +39,9 @@ namespace core
         auto graph = BuildWordGraph(wordMap, [](const auto&) { return 1; });
 
         if (graph.HasCircle()) {
-            std::cerr << "===has circle===" << std::endl;
-            return {-Error::CIRCLE_ERROR, std::vector<std::string>()};
+//            std::cerr << "===has circle===" << std::endl;
+//            return {-Error::CIRCLE_ERROR, std::vector<std::string>()};
+            throw std::invalid_argument("===has circle===");
         }
 
         auto allChains = graph.FindAllChains();
@@ -66,8 +67,9 @@ namespace core
         auto graph = BuildWordGraph(wordMap, calcWeight);
 
         if (!enableLoop && graph.HasCircle()) {
-            std::cerr << "===has circle===" << std::endl;
-            return {-Error::CIRCLE_ERROR, std::vector<std::string>()};
+//            std::cerr << "===has circle===" << std::endl;
+//            return {-Error::CIRCLE_ERROR, std::vector<std::string>()};
+            throw std::invalid_argument("===has circle===");
         }
 
         auto headLimit = [head, &wordMap, disallowed_head](int i) {

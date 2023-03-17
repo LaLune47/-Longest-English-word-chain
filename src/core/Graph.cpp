@@ -182,9 +182,10 @@ namespace core
             int node = q.front();
             q.pop();
             visited.insert(node);
-            if (distance[node] == INT_MIN) {
-                continue;
-            }
+            // TODO
+//            if (distance[node] == INT_MIN) {
+//                continue;
+//            }
             for (auto edge : _edges[node]) {
                 if (distance[edge.To] < distance[node] + _weights[edge.To]) {
                     distance[edge.To] = distance[node] + _weights[edge.To];
@@ -200,6 +201,8 @@ namespace core
                 filterResult.emplace_back(dis);
             }
         }
+
+        // TODO
         if (filterResult.empty()) {
             return make_pair(std::vector<int>(), INT_MIN);
         }

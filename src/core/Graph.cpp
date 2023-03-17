@@ -118,8 +118,10 @@ namespace core
         curValue += _weights[u];
 
         if (tail(u) && curChain.size() >= 2 && curValue > maxValue) {
-            longestChain.clear();
-            longestChain.insert(longestChain.end(), curChain.begin(), curChain.end());
+//            longestChain.clear();
+//            longestChain.insert(longestChain.end(), curChain.begin(), curChain.end());
+            longestChain.resize(curChain.size());
+            std::copy(curChain.begin(), curChain.end(), longestChain.begin());
             maxValue = curValue;
         }
 

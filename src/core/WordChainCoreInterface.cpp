@@ -69,7 +69,14 @@ namespace core
             throw std::invalid_argument("===has circle===");
         }
 
-        auto headLimit = [head, &wordMap, disallowed_head](int i) {
+//        auto headLimit = [head, &wordMap, disallowed_head](int i) {
+//            return wordMap.GetWord(i).front() != disallowed_head && (head == 0 || wordMap.GetWord(i).front() == head);
+//        };
+        auto headNegative = [&wordMap, disallowed_head](int i) {
+            return disallowed_head == 0 || wordMap.GetWord(i).front() != disallowed_head;
+        };
+
+        auto headPositive = [head, &wordMap, disallowed_head](int i) {
             return wordMap.GetWord(i).front() != disallowed_head && (head == 0 || wordMap.GetWord(i).front() == head);
         };
 
@@ -78,8 +85,8 @@ namespace core
         };
 
         auto longestChain = !enableLoop
-                            ? graph.DagFindLongestChain(headLimit, tailLimit)
-                            : graph.FindLongestChainRecursive(headLimit, tailLimit);
+                            ? graph.DagFindLongestChain(headPositive, tailLimit,headNegative)
+                            : graph.FindLongestChainRecursive(headPositive, tailLimit,headNegative);
 
         std::vector<std::string> wordChain;
         for (auto id : longestChain) {

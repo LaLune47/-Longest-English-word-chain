@@ -40,17 +40,17 @@ namespace core
 		std::vector<int> DagTopoSort();
 
 	public:
-		std::vector<int> FindLongestChainRecursive(const std::function<bool(int)>& head, const std::function<bool(int)>& tail);
+		std::vector<int> FindLongestChainRecursive(const std::function<bool(int)>& head, const std::function<bool(int)>& tail,const std::function<bool(int)>& head_reject);
 
 	private:
         void FindLongestChainWithSourceRecursive(int u, const std::function<bool(int)>& tail, std::vector<int>& curChain,
-                                                        std::unordered_set<int>& chainSet, std::vector<int>& longestChain, int& curValue, int& maxValue);
+                                                        std::unordered_set<int>& chainSet, std::vector<int>& longestChain, int& curValue, int& maxValue ,const std::function<bool(int)>& head_reject);
 
     public:
-		std::vector<int> DagFindLongestChain(const std::function<bool(int)>& head, const std::function<bool(int)>& tail);
+		std::vector<int> DagFindLongestChain(const std::function<bool(int)>& head, const std::function<bool(int)>& tail,const std::function<bool(int)>& head_reject);
 
     public:
-        std::pair<std::vector<int>, int> DagFindLongestChainWithSource(int source, std::unordered_set<int>& visited, const std::function<bool(int)>& tail);
+        std::pair<std::vector<int>, int> DagFindLongestChainWithSource(int source, std::unordered_set<int>& visited, const std::function<bool(int)>& tail,const std::function<bool(int)>& head_reject);
 
     private:
         void FindPath(int u, std::vector<int>& curChain, std::unordered_set<int>& chainSet, std::vector<std::vector<int>>& chains);

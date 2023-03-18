@@ -88,7 +88,8 @@ namespace core
         return res;
     }
 
-	std::vector<int> Graph::FindLongestChainRecursive(const std::function<bool(int)>& head, const std::function<bool(int)>& tail)
+	std::vector<int> Graph::FindLongestChainRecursive(const std::function<bool(int)>& head,
+                                                      const std::function<bool(int)>& tail, const std::function<bool(int)>& head_reject)
 	{
         std::vector<int> headQueue;
         for (auto & _edge : _edges) {
@@ -104,14 +105,18 @@ namespace core
 		{
             std::vector<int> curChain;
             std::unordered_set<int> chainSet;
-            FindLongestChainWithSourceRecursive(headNode, tail, curChain, chainSet, longestChain, curValue, maxValue);
+            FindLongestChainWithSourceRecursive(headNode, tail, curChain, chainSet, longestChain, curValue, maxValue, head_reject);
 		}
 
 		return longestChain.size() >= 2 ? longestChain : std::vector<int>();
 	}
 
     void Graph::FindLongestChainWithSourceRecursive(int u, const std::function<bool(int)>& tail, std::vector<int>& curChain,
-                                             std::unordered_set<int>& chainSet, std::vector<int>& longestChain, int& curValue, int& maxValue) {
+                                             std::unordered_set<int>& chainSet, std::vector<int>& longestChain, int& curValue, int& maxValue ,const std::function<bool(int)>& head_reject) {
+        if (!head_reject(u)) {
+            return;
+        }
+
         curChain.push_back(u);
         chainSet.insert(u);
         curValue += _weights[u];
@@ -127,7 +132,7 @@ namespace core
         for (auto edge : _edges[u]) {
             int v = edge.To;
             if (!chainSet.count(v)) {
-                FindLongestChainWithSourceRecursive(v, tail, curChain, chainSet, longestChain, curValue, maxValue);
+                FindLongestChainWithSourceRecursive(v, tail, curChain, chainSet, longestChain, curValue, maxValue,head_reject);
             }
         }
         curChain.pop_back();
@@ -135,7 +140,7 @@ namespace core
         curValue -= _weights[u];
     }
 
-    std::vector<int> Graph::DagFindLongestChain(const std::function<bool(int)>& head, const std::function<bool(int)>& tail) {
+    std::vector<int> Graph::DagFindLongestChain(const std::function<bool(int)>& head, const std::function<bool(int)>& tail, const std::function<bool(int)>& head_reject) {
 
         std::unordered_set<int> visited;
         std::vector<int> topo = DagTopoSort();
@@ -152,7 +157,7 @@ namespace core
         for (int node : queue) {
             if (!visited.count(node)) {
                 //auto [longestPathFromNode, length] = DagFindLongestChainWithSource(node, visited, tail);
-                auto temp = DagFindLongestChainWithSource(node, visited, tail);
+                auto temp = DagFindLongestChainWithSource(node, visited, tail ,head_reject);
                 auto longestPathFromNode = std::get<0>(temp);
                 auto length = std::get<1>(temp);
                 if (longestPathFromNode.size() >= 2 && (result.empty() || maxLength < length)) {
@@ -166,7 +171,7 @@ namespace core
     }
 
     std::pair<std::vector<int>, int> Graph::
-    DagFindLongestChainWithSource(int source,std::unordered_set<int>& visited, const std::function<bool(int)>& tail) {
+    DagFindLongestChainWithSource(int source,std::unordered_set<int>& visited, const std::function<bool(int)>& tail, const std::function<bool(int)>& head_reject) {
         std::unordered_map<int, int> path;
         std::queue<int> q;
         q.push(source);
@@ -182,7 +187,7 @@ namespace core
             q.pop();
             visited.insert(node);
 
-            if (distance[node] == INT_MIN) {
+            if (distance[node] == INT_MIN || !head_reject(node)) {
                 continue;
             }
             for (auto edge : _edges[node]) {

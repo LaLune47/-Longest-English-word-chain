@@ -1,5 +1,6 @@
 ﻿#include <algorithm>
 #include <locale>
+#include <iostream>
 #include "WordMap.h"
 
 namespace core
@@ -39,18 +40,17 @@ namespace core
 
 	std::string WordMap::GetWord(int id)
 	{
-		assert(id > 0 && id <= _wordCount);
 		return _idToWord[id];
 	}
 
 	int WordMap::GetId(const std::string &word)
 	{
-        assert(_wordToId.find(toLower(word)) != _wordToId.end());
 		return _wordToId[toLower(word)];
 	}
 
     std::vector<std::string> WordMap::GetAllWords() const {
         std::vector<std::string> keys;
+
         for (const auto& key : _wordToId) {
             keys.push_back(key.first);
         }

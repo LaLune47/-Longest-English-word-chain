@@ -13,13 +13,14 @@ namespace core
             headMap[ch] = {};
         }
 
-        for (const auto& word : wordMap.GetAllWords()) {
+        std::vector<std::string> allWords = wordMap.GetAllWords();
+        for (const auto& word : allWords) {
             char head = word.front();
             headMap[head].push_back(word);
             graph.AddNode(wordMap.GetId(word), calcWeight(word));
         }
 
-        for (const auto& fromWord : wordMap.GetAllWords()) {
+        for (const auto& fromWord : allWords) {
             char tail = fromWord.back();
             int fromWordId = wordMap.GetId(fromWord);
 
@@ -39,8 +40,6 @@ namespace core
         auto graph = BuildWordGraph(wordMap, [](const auto&) { return 1; });
 
         if (graph.HasCircle()) {
-//            std::cerr << "===has circle===" << std::endl;
-//            return {-Error::CIRCLE_ERROR, std::vector<std::string>()};
             throw std::invalid_argument("===has circle===");
         }
 
@@ -67,8 +66,6 @@ namespace core
         auto graph = BuildWordGraph(wordMap, calcWeight);
 
         if (!enableLoop && graph.HasCircle()) {
-//            std::cerr << "===has circle===" << std::endl;
-//            return {-Error::CIRCLE_ERROR, std::vector<std::string>()};
             throw std::invalid_argument("===has circle===");
         }
 
@@ -102,7 +99,7 @@ namespace core
     }
 
     int WordChainCoreInterface:: gen_chains_all(char* words[], int len, char* result[]) {
-        auto wordList = CharConverter::ReadFromBytePtrArray(words, len);
+        auto wordList = CharConverter::read_from_ptr(words, len);
         //auto [ret, res] = GenChainsAll(wordList);
         auto temp = GenChainsAll(wordList);
 
@@ -112,13 +109,13 @@ namespace core
             return ret;
         }
 
-        CharConverter::WriteToBytePtrArray(res, result);
+        CharConverter::write_to_byte(res, result);
         return ret;
     }
 
     int WordChainCoreInterface:: gen_chain_word(char* words[], int len, char* result[], char head,
                        char tail, char disallowed_head, bool enable_loop) {
-        auto wordList = CharConverter::ReadFromBytePtrArray(words, len);
+        auto wordList = CharConverter::read_from_ptr(words, len);
         //auto [ret, chain] = GenChainWord(wordList, head, tail, enable_loop);
         auto temp = GenChainWord(wordList, head, tail, disallowed_head, enable_loop);
         auto ret = std::get<0>(temp);
@@ -126,13 +123,13 @@ namespace core
         if (ret < 0) {
             return ret;
         }
-        CharConverter::WriteToBytePtrArray(chain, result);
+        CharConverter::write_to_byte(chain, result);
         return ret;
     }
 
     int WordChainCoreInterface:: gen_chain_char(char* words[], int len, char* result[], char head,
                        char tail, char disallowed_head, bool enable_loop) {
-        auto wordList = CharConverter::ReadFromBytePtrArray(words, len);
+        auto wordList = CharConverter::read_from_ptr(words, len);
         //auto [ret, chain] = GenChainChar(wordList, head, tail, enable_loop);
         auto temp = GenChainChar(wordList, head, tail, disallowed_head,enable_loop);
         auto ret = std::get<0>(temp);
@@ -140,7 +137,7 @@ namespace core
         if (ret < 0) {
             return ret;
         }
-        CharConverter::WriteToBytePtrArray(chain, result);
+        CharConverter::write_to_byte(chain, result);
         return ret;
     }
 }

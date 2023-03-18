@@ -80,7 +80,6 @@ namespace core
             }
         }
 
-        assert(any_of(tempInDegrees.begin(), tempInDegrees.end(), [](int x){ return x == 0; }));
         std::vector<int> res(result.size());
         for (int & re : res) {
             re = result.front();
@@ -182,10 +181,10 @@ namespace core
             int node = q.front();
             q.pop();
             visited.insert(node);
-            // TODO
-//            if (distance[node] == INT_MIN) {
-//                continue;
-//            }
+
+            if (distance[node] == INT_MIN) {
+                continue;
+            }
             for (auto edge : _edges[node]) {
                 if (distance[edge.To] < distance[node] + _weights[edge.To]) {
                     distance[edge.To] = distance[node] + _weights[edge.To];
@@ -202,7 +201,6 @@ namespace core
             }
         }
 
-        // TODO
         if (filterResult.empty()) {
             return make_pair(std::vector<int>(), INT_MIN);
         }
